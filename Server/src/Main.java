@@ -31,7 +31,7 @@ public class Main {
         }
 
         IO.CheckedWrite(nameOfSaveFile);
-        collection = Menu.lhmSort(collection);
+        collection = Useful.lhmSort(collection);
         Menu.help();
 
         while(true) {
@@ -69,7 +69,7 @@ public class Main {
                     else
                         collection.putAll(menu.insert(current[1]));
 
-                    collection = Menu.lhmSort(collection);
+                    collection = Useful.lhmSort(collection);
                     break;
                 case("remove_key"):
                     if (current.length < 2)

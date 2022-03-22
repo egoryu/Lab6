@@ -129,48 +129,48 @@ public class IO {
 
         if (element.length == 18) {
             if (element[0].isEmpty()
-                    || !Menu.isInteger(element[1])
+                    || !Useful.isInteger(element[1])
                     || element[2].isEmpty()
-                    || !Menu.isFloat(element[3])
-                    || !Menu.isInteger(element[4])
-                    || !Menu.isInteger(element[5]) || Integer.parseInt(element[5]) <= 1970 || Integer.parseInt(element[5]) >= 2023
-                    || !Menu.isInteger(element[6]) || Integer.parseInt(element[6]) <= 0 || Integer.parseInt(element[6]) >= 13
-                    || !Menu.isInteger(element[7]) || Integer.parseInt(element[7]) <= 0 || Integer.parseInt(element[7]) >= 32
-                    || !Menu.isInteger(element[8]) || Integer.parseInt(element[8]) < 0 || Integer.parseInt(element[8]) >= 24
-                    || !Menu.isInteger(element[9]) || Integer.parseInt(element[9]) < 0 || Integer.parseInt(element[9]) >= 60
-                    || !Menu.isInteger(element[10]) || Integer.parseInt(element[10]) < 0 || Integer.parseInt(element[10]) >= 60
-                    || !Menu.isInteger(element[11]) || Integer.parseInt(element[11]) <= 0
+                    || !Useful.isFloat(element[3])
+                    || !Useful.isInteger(element[4])
+                    || !Useful.isInteger(element[5]) || Integer.parseInt(element[5]) <= 1970 || Integer.parseInt(element[5]) >= 2023
+                    || !Useful.isInteger(element[6]) || Integer.parseInt(element[6]) <= 0 || Integer.parseInt(element[6]) >= 13
+                    || !Useful.isInteger(element[7]) || Integer.parseInt(element[7]) <= 0 || Integer.parseInt(element[7]) >= 32
+                    || !Useful.isInteger(element[8]) || Integer.parseInt(element[8]) < 0 || Integer.parseInt(element[8]) >= 24
+                    || !Useful.isInteger(element[9]) || Integer.parseInt(element[9]) < 0 || Integer.parseInt(element[9]) >= 60
+                    || !Useful.isInteger(element[10]) || Integer.parseInt(element[10]) < 0 || Integer.parseInt(element[10]) >= 60
+                    || !Useful.isInteger(element[11]) || Integer.parseInt(element[11]) <= 0
                     || element[12].isEmpty() || element[12].length() >= 5207 || element[12].contains(";")
                     || !a.contains(element[13])
                     || element[14].isEmpty()
                     || element[15].isEmpty() || !element[15].equals("null")
-                    || !Menu.isInteger(element[16]) || Integer.parseInt(element[16]) <= 0
-                    || !Menu.isInteger(element[17]) || Integer.parseInt(element[17]) <= 0) {
+                    || !Useful.isInteger(element[16]) || Integer.parseInt(element[16]) <= 0
+                    || !Useful.isInteger(element[17]) || Integer.parseInt(element[17]) <= 0) {
                 return false;
             }
         } else if (element.length == 22){
             if (element[0].isEmpty()
-                    || !Menu.isInteger(element[1])
+                    || !Useful.isInteger(element[1])
                     || element[2].isEmpty()
-                    || !Menu.isFloat(element[3])
-                    || !Menu.isInteger(element[4])
-                    || !Menu.isInteger(element[5]) || Integer.parseInt(element[5]) <= 1970 || Integer.parseInt(element[5]) >= 2023
-                    || !Menu.isInteger(element[6]) || Integer.parseInt(element[6]) <= 0 || Integer.parseInt(element[6]) >= 13
-                    || !Menu.isInteger(element[7]) || Integer.parseInt(element[7]) <= 0 || Integer.parseInt(element[7]) >= 32
-                    || !Menu.isInteger(element[8]) || Integer.parseInt(element[8]) < 0 || Integer.parseInt(element[8]) >= 24
-                    || !Menu.isInteger(element[9]) || Integer.parseInt(element[9]) < 0 || Integer.parseInt(element[9]) >= 60
-                    || !Menu.isInteger(element[10]) || Integer.parseInt(element[10]) < 0 || Integer.parseInt(element[10]) >= 60
-                    || !Menu.isInteger(element[11]) || Integer.parseInt(element[11]) <= 0
+                    || !Useful.isFloat(element[3])
+                    || !Useful.isInteger(element[4])
+                    || !Useful.isInteger(element[5]) || Integer.parseInt(element[5]) <= 1970 || Integer.parseInt(element[5]) >= 2023
+                    || !Useful.isInteger(element[6]) || Integer.parseInt(element[6]) <= 0 || Integer.parseInt(element[6]) >= 13
+                    || !Useful.isInteger(element[7]) || Integer.parseInt(element[7]) <= 0 || Integer.parseInt(element[7]) >= 32
+                    || !Useful.isInteger(element[8]) || Integer.parseInt(element[8]) < 0 || Integer.parseInt(element[8]) >= 24
+                    || !Useful.isInteger(element[9]) || Integer.parseInt(element[9]) < 0 || Integer.parseInt(element[9]) >= 60
+                    || !Useful.isInteger(element[10]) || Integer.parseInt(element[10]) < 0 || Integer.parseInt(element[10]) >= 60
+                    || !Useful.isInteger(element[11]) || Integer.parseInt(element[11]) <= 0
                     || element[12].isEmpty() || element[12].length() >= 5207 || element[12].contains(";")
                     || !a.contains(element[13])
                     || element[14].isEmpty()
-                    || !Menu.isInteger(element[15]) || Integer.parseInt(element[15]) <= 1970 || Integer.parseInt(element[15]) >= 2023
-                    || !Menu.isInteger(element[16]) || Integer.parseInt(element[16]) <= 0 || Integer.parseInt(element[16]) >= 13
-                    || !Menu.isInteger(element[17]) || Integer.parseInt(element[17]) <= 0 || Integer.parseInt(element[17]) >= 32
-                    || !Menu.isInteger(element[18]) || Integer.parseInt(element[18]) < 0 || Integer.parseInt(element[18]) >= 24
-                    || !Menu.isInteger(element[19]) || Integer.parseInt(element[19]) < 0 || Integer.parseInt(element[19]) >= 60
-                    || !Menu.isInteger(element[20]) || Integer.parseInt(element[20]) <= 0
-                    || !Menu.isInteger(element[21]) || Integer.parseInt(element[21]) <= 0) {
+                    || !Useful.isInteger(element[15]) || Integer.parseInt(element[15]) <= 1970 || Integer.parseInt(element[15]) >= 2023
+                    || !Useful.isInteger(element[16]) || Integer.parseInt(element[16]) <= 0 || Integer.parseInt(element[16]) >= 13
+                    || !Useful.isInteger(element[17]) || Integer.parseInt(element[17]) <= 0 || Integer.parseInt(element[17]) >= 32
+                    || !Useful.isInteger(element[18]) || Integer.parseInt(element[18]) < 0 || Integer.parseInt(element[18]) >= 24
+                    || !Useful.isInteger(element[19]) || Integer.parseInt(element[19]) < 0 || Integer.parseInt(element[19]) >= 60
+                    || !Useful.isInteger(element[20]) || Integer.parseInt(element[20]) <= 0
+                    || !Useful.isInteger(element[21]) || Integer.parseInt(element[21]) <= 0) {
                 return false;
             }
         } else {

@@ -70,7 +70,7 @@ public class Menu {
         String input;
 
         input = lhmKey;
-        while(input.isEmpty() || input.contains(";") || Menu.isOnlyTab(input)) {
+        while(input.isEmpty() || input.contains(";") || Useful.isOnlyTab(input)) {
             System.out.print("Введите ключ: ");
             if (in.hasNextLine())
                 input = in.nextLine();
@@ -118,7 +118,7 @@ public class Menu {
         Scanner in = new Scanner(System.in);
         String key;
 
-        while(!Menu.isInteger(id)) {
+        while(!Useful.isInteger(id)) {
             System.out.print("Введите id: ");
             if (in.hasNextLine())
                 id = in.nextLine();
@@ -184,7 +184,7 @@ public class Menu {
         int res = 0;
         int mp;
 
-        while(!Menu.isInteger(minimalPoint) || Integer.parseInt(minimalPoint) <= 0) {
+        while(!Useful.isInteger(minimalPoint) || Integer.parseInt(minimalPoint) <= 0) {
             System.out.print("Введите значение minimal point: ");
             if (in.hasNextLine())
                 minimalPoint = in.nextLine();
@@ -206,7 +206,7 @@ public class Menu {
     public static LinkedHashMap<String, LabWork> removeLowerKey(LinkedHashMap<String, LabWork> collection, String lhmKey) {
         Scanner in = new Scanner(System.in);
 
-        while(lhmKey.isEmpty() || lhmKey.contains(";") || Menu.isOnlyTab(lhmKey)) {
+        while(lhmKey.isEmpty() || lhmKey.contains(";") || Useful.isOnlyTab(lhmKey)) {
             System.out.print("Введите ключ по которому надо удалить: ");
             if (in.hasNextLine())
                 lhmKey = in.nextLine();
@@ -274,56 +274,5 @@ public class Menu {
         collection = Script.makeScript(collection, script, saveFile);
         return collection;
     }
-    public static LinkedHashMap<String, LabWork> lhmSort(LinkedHashMap<String, LabWork> collection) {
-        if (collection.isEmpty()) {
-            return collection;
-        }
 
-        List<Map.Entry<String, LabWork>> entries =
-                new ArrayList<>(collection.entrySet());
-
-        Collections.sort(entries, new Comparator<Map.Entry<String, LabWork>>() {
-            public int compare(Map.Entry<String, LabWork> a, Map.Entry<String, LabWork> b){
-                return a.getValue().compareTo(b.getValue());
-            }
-        });
-
-        LinkedHashMap<String, LabWork> sortedMap = new LinkedHashMap<>();
-
-        for (Map.Entry<String, LabWork> entry : entries) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
-    }
-
-    public static boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    public static boolean isInteger(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    public static boolean isFloat(String str) {
-        try {
-            Float.parseFloat(str);
-            return true;
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    public static boolean isOnlyTab(String str) {
-        return str.matches("[\\s]+");
-    }
 }

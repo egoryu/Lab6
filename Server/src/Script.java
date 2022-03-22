@@ -78,7 +78,7 @@ public class Script {
                     }
 
                     collection.put(current[1], Script.insertScript(strScript, i));
-                    collection = Menu.lhmSort(collection);
+                    collection = Useful.lhmSort(collection);
                     i += x;
                     break;
                 case ("remove_key"):
@@ -104,7 +104,7 @@ public class Script {
                     }
                     break;
                 case ("update"):
-                    if (current.length < 2 || !Menu.isInteger(current[1])) {
+                    if (current.length < 2 || !Useful.isInteger(current[1])) {
                         System.out.println("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
@@ -150,7 +150,7 @@ public class Script {
                     System.out.println(Menu.maxByName(collection));
                     break;
                 case ("count_by_minimal_point"):
-                    if (current.length < 2 || !Menu.isInteger(current[1])) {
+                    if (current.length < 2 || !Useful.isInteger(current[1])) {
                         System.out.println("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
@@ -244,15 +244,15 @@ public class Script {
             String a = Arrays.toString(Difficulty.values());
             if (strScript.get(position + 8).isEmpty()) {
                 if (strScript.get(position + 1).isEmpty()
-                        || !Menu.isFloat(strScript.get(position + 2))
-                        || !Menu.isInteger(strScript.get(position + 3))
-                        || !Menu.isInteger(strScript.get(position + 4)) || Integer.parseInt(strScript.get(position + 4)) <= 0
+                        || !Useful.isFloat(strScript.get(position + 2))
+                        || !Useful.isInteger(strScript.get(position + 3))
+                        || !Useful.isInteger(strScript.get(position + 4)) || Integer.parseInt(strScript.get(position + 4)) <= 0
                         || strScript.get(position + 5).isEmpty() || strScript.get(position + 5).length() >= 5207 || strScript.get(position + 5).contains(";")
                         || !a.contains(strScript.get(position + 6))
                         || strScript.get(position + 7).isEmpty()
                         || !strScript.get(position + 8).isEmpty()
-                        || !Menu.isInteger(strScript.get(position + 9)) || Integer.parseInt(strScript.get(position + 9)) <= 0
-                        || !Menu.isInteger(strScript.get(position + 10)) || Integer.parseInt(strScript.get(position + 10)) <= 0) {
+                        || !Useful.isInteger(strScript.get(position + 9)) || Integer.parseInt(strScript.get(position + 9)) <= 0
+                        || !Useful.isInteger(strScript.get(position + 10)) || Integer.parseInt(strScript.get(position + 10)) <= 0) {
                     return 0;
                 }
                 else {
@@ -260,19 +260,19 @@ public class Script {
                 }
             } else if (strScript.size() - position - 1 >= 14) {
                 if (strScript.get(position + 1).isEmpty()
-                        || !Menu.isFloat(strScript.get(position + 2))
-                        || !Menu.isInteger(strScript.get(position + 3))
-                        || !Menu.isInteger(strScript.get(position + 4)) || Integer.parseInt(strScript.get(position + 4)) <= 0
+                        || !Useful.isFloat(strScript.get(position + 2))
+                        || !Useful.isInteger(strScript.get(position + 3))
+                        || !Useful.isInteger(strScript.get(position + 4)) || Integer.parseInt(strScript.get(position + 4)) <= 0
                         || strScript.get(position + 5).isEmpty() || strScript.get(position + 5).length() >= 5207 || strScript.get(position + 5).contains(";")
                         || !a.contains(strScript.get(position + 6))
                         || strScript.get(position + 7).isEmpty()
-                        || !Menu.isInteger(strScript.get(position + 8)) || Integer.parseInt(strScript.get(position + 8)) <= 1970 || Integer.parseInt(strScript.get(position + 8)) >= 2023
-                        || !Menu.isInteger(strScript.get(position + 9)) || Integer.parseInt(strScript.get(position + 9)) <= 0 || Integer.parseInt(strScript.get(position + 9)) >= 13
-                        || !Menu.isInteger(strScript.get(position + 10)) || Integer.parseInt(strScript.get(position + 10)) <= 0 || Integer.parseInt(strScript.get(position + 10)) >= 32
-                        || !Menu.isInteger(strScript.get(position + 11)) || Integer.parseInt(strScript.get(position + 11)) < 0 || Integer.parseInt(strScript.get(position + 11)) >= 24
-                        || !Menu.isInteger(strScript.get(position + 12)) || Integer.parseInt(strScript.get(position + 12)) < 0 || Integer.parseInt(strScript.get(position + 12)) >= 60
-                        || !Menu.isInteger(strScript.get(position + 13)) || Integer.parseInt(strScript.get(position + 13)) <= 0
-                        || !Menu.isInteger(strScript.get(position + 14)) || Integer.parseInt(strScript.get(position + 14)) <= 0) {
+                        || !Useful.isInteger(strScript.get(position + 8)) || Integer.parseInt(strScript.get(position + 8)) <= 1970 || Integer.parseInt(strScript.get(position + 8)) >= 2023
+                        || !Useful.isInteger(strScript.get(position + 9)) || Integer.parseInt(strScript.get(position + 9)) <= 0 || Integer.parseInt(strScript.get(position + 9)) >= 13
+                        || !Useful.isInteger(strScript.get(position + 10)) || Integer.parseInt(strScript.get(position + 10)) <= 0 || Integer.parseInt(strScript.get(position + 10)) >= 32
+                        || !Useful.isInteger(strScript.get(position + 11)) || Integer.parseInt(strScript.get(position + 11)) < 0 || Integer.parseInt(strScript.get(position + 11)) >= 24
+                        || !Useful.isInteger(strScript.get(position + 12)) || Integer.parseInt(strScript.get(position + 12)) < 0 || Integer.parseInt(strScript.get(position + 12)) >= 60
+                        || !Useful.isInteger(strScript.get(position + 13)) || Integer.parseInt(strScript.get(position + 13)) <= 0
+                        || !Useful.isInteger(strScript.get(position + 14)) || Integer.parseInt(strScript.get(position + 14)) <= 0) {
                     return 0;
                 } else {
                     return 14;
