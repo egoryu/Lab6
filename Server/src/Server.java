@@ -3,7 +3,7 @@ import java.util.ArrayDeque;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
-public class Main {
+public class Server {
     public static void main(String[] args) throws IOException {
         LinkedHashMap<String, LabWork> collection = new LinkedHashMap<>();
         Scanner in = new Scanner(System.in);
