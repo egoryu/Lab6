@@ -258,7 +258,7 @@ public class Menu {
         }
     }
 
-    public static LinkedHashMap<String, LabWork> executeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) throws IOException {
+    public static LinkedHashMap<String, LabWork> executeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
         Scanner in = new Scanner(System.in);
 
         while(script.isEmpty()) {

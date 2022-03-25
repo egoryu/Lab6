@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 public class IO {
-    public static LinkedHashMap<String, LabWork> Read(String name, char del) throws IOException {
+    public static LinkedHashMap<String, LabWork> Read(String name, char del) {
         LinkedHashMap<String, LabWork> collection = new LinkedHashMap<>();
         InputStreamReader reader;
         try {
@@ -20,7 +20,13 @@ public class IO {
         ArrayList<String> st = new ArrayList<>();
         String tmp = "";
 
-        while ((c = reader.read()) != -1) {
+        while (true) {
+            try {
+                if ((c = reader.read()) == -1) break;
+            } catch (IOException e) {
+                System.out.println("Ошибка при чтении");
+                return null;
+            }
             if (c == '\n') {
                 st.add(tmp);
                 tmp = "";
@@ -101,7 +107,11 @@ public class IO {
 
         }
 
-        reader.close();
+        try {
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Произошла ошибка закрытия файла");
+        }
 
         return collection;
     }
@@ -179,13 +189,24 @@ public class IO {
         return true;
     }
 
-    public static void CheckedWrite(String name) throws IOException {
+    public static boolean CheckedWrite(String name) {
         File file;
 
         file = new File(name);
         if (file == null || !file.canWrite()) {
-            System.out.println("Не получиться сохранить");
+            return false;
         }
+        return true;
+    }
+
+    public static boolean CheckedRead(String name) {
+        File file;
+
+        file = new File(name);
+        if (file == null || !file.canRead()) {
+            return false;
+        }
+        return true;
     }
 }
 

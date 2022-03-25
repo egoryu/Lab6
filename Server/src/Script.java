@@ -11,7 +11,7 @@ import java.util.*;
 public class Script {
     public static ArrayList<String> scriptHistory = new ArrayList<>();
 
-    public static LinkedHashMap<String, LabWork> makeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) throws IOException {
+    public static LinkedHashMap<String, LabWork> makeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
         if (scriptHistory.contains(script)) {
             System.out.println("Образовался цикл из команд");
             scriptHistory.remove(script);
@@ -34,7 +34,15 @@ public class Script {
         ArrayList<String> strScript = new ArrayList<>();
         String tmp = "";
 
-        while ((c = reader.read()) != -1) {
+        while (true) {
+            try {
+                if ((c = reader.read()) != -1)
+                    break;
+            } catch (IOException e) {
+                System.out.println("Ошибка при чтении");
+                return null;
+            }
+
             if (c == '\n') {
                 strScript.add(tmp);
                 tmp = "";
