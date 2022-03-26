@@ -10,22 +10,22 @@ import java.util.*;
 
 public class Script {
     public static ArrayList<String> scriptHistory = new ArrayList<>();
+    ArrayList<String> answer = new ArrayList<>();
 
-    public static LinkedHashMap<String, LabWork> makeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
+    public LinkedHashMap<String, LabWork> makeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
         if (scriptHistory.contains(script)) {
-            System.out.println("Образовался цикл из команд");
+            answer.add("Образовался цикл из команд");
             scriptHistory.remove(script);
             return collection;
         } else {
             scriptHistory.add(script);
         }
 
-        InputStreamReader reader = null;
+        InputStreamReader reader;
         try {
-            reader = new InputStreamReader(
-                    new FileInputStream(script));
+            reader = new InputStreamReader(new FileInputStream(script));
         } catch (FileNotFoundException e) {
-            System.out.println("Не получилось открыть файл");
+            answer.add("Не получилось открыть файл");
             scriptHistory.remove(script);
             return collection;
         }
@@ -36,23 +36,24 @@ public class Script {
 
         while (true) {
             try {
-                if ((c = reader.read()) != -1)
+                if ((c = reader.read()) == -1)
                     break;
             } catch (IOException e) {
-                System.out.println("Ошибка при чтении");
+                answer.add("Ошибка при чтении");
                 return null;
             }
 
             if (c == '\n') {
                 strScript.add(tmp);
                 tmp = "";
-            } else
+            } else if (c != '\r')
                 tmp += (char) c;
         }
 
         ArrayDeque<String> history = new ArrayDeque<>();
-        for (int i = 0, strScriptSize = strScript.size(); i < strScriptSize; i++) {
+        for (int i = 0; i < strScript.size(); i++) {
             String[] current = strScript.get(i).split(" ");
+            Menu menu = new Menu();
 
             if (current[0].isEmpty())
                 continue;
@@ -60,32 +61,32 @@ public class Script {
             history.addLast(current[0]);
             switch (current[0]) {
                 case ("help"):
-                    Menu.help();
+                    menu.help();
                     break;
-                case ("exit"):
+                /*case ("exit"):
                     System.exit(0);
-                    break;
+                    break;*/
                 case ("show"):
-                    Menu.show(collection);
+                    menu.show(collection);
                     break;
                 case ("info"):
-                    Menu.info(collection);
+                    menu.info(collection);
                     break;
                 case ("insert"):
                     if (current.length < 2 || current[1].isEmpty()) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
                     int x = checkScript(strScript, i);
 
                     if (x == 0) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
 
-                    collection.put(current[1], Script.insertScript(strScript, i));
+                    collection = menu.insert(collection, current[1], Script.insertScript(strScript, i));
                     collection = Useful.lhmSort(collection);
                     i += x;
                     break;
@@ -95,25 +96,18 @@ public class Script {
                         scriptHistory.remove(script);
                         return collection;
                     }
-                    collection.remove(current[1]);
+                    collection = menu.removeKey(collection, current[1]);
                     break;
                 case ("clear"):
                     collection.clear();
-                    System.out.println("Коллекция очищена");
+                    menu.answer.add("Коллекция очищена");
                     break;
                 case ("history"):
-                    if (history.isEmpty())
-                        System.out.println("История пуста");
-                    else {
-                        System.out.println("Последние 12 команд: ");
-                        for (String s : history) {
-                            System.out.println(s);
-                        }
-                    }
+                    menu.history(history);
                     break;
                 case ("update"):
                     if (current.length < 2 || !Useful.isInteger(current[1])) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
@@ -121,63 +115,42 @@ public class Script {
                     int x1 = checkScript(strScript, i);
 
                     if (x1 == 0) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
 
-                    Iterator iterator = collection.values().iterator();
-                    int cur = 0;
-                    LabWork labWork1 = null;
-
-                    while (iterator.hasNext()) {
-                        labWork1 = (LabWork) iterator.next();
-                        if (labWork1.getId() == Integer.parseInt(current[1])) {
-                            break;
-                        }
-                        cur++;
-                    }
-
-                    if (cur != collection.size()) {
-                        iterator = collection.keySet().iterator();
-                        while (cur-- > 0) {
-                            iterator.next();
-                        }
-                        String key = (String) iterator.next();
-
-                        collection.replace(key, labWork1, insertScript(strScript, i));
-                    } else
-                        System.out.println("Такого id нет");
+                    collection = menu.update(collection, current[1], insertScript(strScript, i));
 
                     i += x1;
                     break;
                 case ("sum_of_minimal_point"):
-                    System.out.println(Menu.sumOfMinimalPoint(collection));
+                    menu.answer.add(String.valueOf(menu.sumOfMinimalPoint(collection)));
                     break;
                 case ("max_by_name"):
-                    System.out.println(Menu.maxByName(collection));
+                    menu.answer.add(String.valueOf(menu.maxByName(collection)));
                     break;
                 case ("count_by_minimal_point"):
                     if (current.length < 2 || !Useful.isInteger(current[1])) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
-                    System.out.println(Menu.countByMinimalPoint(collection, current[1]));
+                    menu.answer.add(String.valueOf(menu.countByMinimalPoint(collection, current[1])));
                     break;
                 case ("remove_lower_key"):
                     if (current.length < 2 || current[1].isEmpty()) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
-                    collection = Menu.removeLowerKey(collection, current[1]);
+                    collection = menu.removeLowerKey(collection, current[1]);
                     break;
                 case ("replace_if_greater"):
                     int x2 = checkScript(strScript, i);
 
                     if (x2 == 0) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
@@ -185,37 +158,34 @@ public class Script {
                     LabWork labWork = Script.insertScript(strScript, i);
 
                     if (current.length < 2 || current[1].isEmpty()) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
 
-                    if (collection.get(current[1]).compareTo(labWork) < 0) {
-                        collection.replace(current[1], collection.get(current[1]), labWork);
-                        System.out.println("Заменено");
-                    } else {
-                        System.out.println("Замены не было");
-                    }
+                    collection = menu.replaceIfGreater(collection, current[1], labWork);
+
                     i += x2;
                     break;
                 case ("save"):
-                    Menu.savetoFile(collection, saveFile, ',');
+                    menu.savetoFile(collection, saveFile, ';');
                     break;
                 case ("execute_script"):
                     if (current.length < 2 || current[1].isEmpty()) {
-                        System.out.println("Неправильно введена команда в скрипте");
+                        menu.answer.add("Неправильно введена команда в скрипте");
                         scriptHistory.remove(script);
                         return collection;
                     }
-                    collection = makeScript(collection, current[1], saveFile);
+                    collection = menu.executeScript(collection, current[1], saveFile);
                     break;
                 default:
-                    System.out.println("Неправильно введена команда в скрипте");
+                    answer.add("Неправильно введена команда в скрипте");
                     scriptHistory.remove(script);
                     return collection;
             }
             if (history.size() > 12)
                 history.poll();
+            answer.addAll(menu.answer);
         }
         scriptHistory.remove(script);
         return collection;
@@ -291,4 +261,4 @@ public class Script {
         }
     }
 }
-//"C:\Users\egorn\Documents\ИТМО\1_курс\Програмировани\Lab5\pot.txt"
+//"C:\Users\egorn\Documents\ИТМО\1_курс\Програмировани\Lab6\Server\src\pot.txt"

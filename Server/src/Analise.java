@@ -1,19 +1,22 @@
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class Analise {
     LinkedHashMap<String, LabWork> collection = new LinkedHashMap<>();
     Scanner in = new Scanner(System.in);
-    Menu menu = new Menu();
     String nameOfSaveFile = "";
     ArrayDeque<String> history = new ArrayDeque<>();
     public boolean exit = false;
-    final int SIZE = 1;
+
+    File file;
+
+    InetAddress client;
+    int port;
 
     public void loadFile(String nameOfFile) {
         while (nameOfFile.isEmpty() || !IO.CheckedWrite(nameOfFile) || !IO.CheckedRead(nameOfFile)) {
@@ -36,44 +39,27 @@ public class Analise {
     }
 
     public void startAnalise(DatagramSocket datagramSocket) throws IOException, ClassNotFoundException {
-        Request request = null;
-        byte[] len = new byte[SIZE];
-        DatagramPacket inputlen = new DatagramPacket(len, len.length);
-        System.out.println(2);
-        datagramSocket.receive(inputlen);
-        System.out.println(Arrays.toString(inputlen.getData()));
-        DatagramPacket o = new DatagramPacket(len, len.length, inputlen.getAddress(), inputlen.getPort());
-        datagramSocket.send(o);
+        Menu menu = new Menu();
+        file = new File(".\\Server\\src\\analise.ser");
 
-        System.out.println(1);
-        System.out.println(inputlen);
-        byte[] req = new byte[convertToInt(len)];
-        DatagramPacket inputRequest = new DatagramPacket(req, req.length);
+        Request request = getLetter(datagramSocket);
 
-        try (FileOutputStream outputStream = new FileOutputStream("/tmp/tmp.ser")) {
-            outputStream.write(req);
-        }
-        FileInputStream fileIn = new FileInputStream("/tmp/tmp.ser");
-        ObjectInputStream in = new ObjectInputStream(fileIn);
-        request = (Request) in.readObject();
-        in.close();
-        
         history.addLast(request.getCommand());
         switch (request.getCommand()) {
             case ("help"):
-                Menu.help();
+                menu.help();
                 break;
             case ("exit"):
                 System.exit(0);
                 break;
             case ("show"):
-                Menu.show(collection);
+                menu.show(collection);
                 break;
             case ("info"):
-                Menu.info(collection);
+                menu.info(collection);
                 break;
             case ("insert"):
-                collection.putAll(menu.insert(request.getArgument()));
+                collection = menu.insert(collection, request.getArgument(), request.getTarget());
 
                 collection = Useful.lhmSort(collection);
                 break;
@@ -82,50 +68,100 @@ public class Analise {
                 break;
             case ("clear"):
                 collection.clear();
-                System.out.println("Коллекция очищена");
+                menu.answer.add("Коллекция очищена");
                 break;
             case ("history"):
-                Menu.history(history);
+                menu.history(history);
                 break;
             case ("update"):
-                collection = menu.update(collection, request.getArgument());
+                collection = menu.update(collection, request.getArgument(), request.getTarget());
                 break;
             case ("sum_of_minimal_point"):
-                System.out.println(Menu.sumOfMinimalPoint(collection));
+                menu.answer.add(String.valueOf(menu.sumOfMinimalPoint(collection)));
                 break;
             case ("max_by_name"):
-                System.out.println(Menu.maxByName(collection));
+                menu.answer.add(String.valueOf(menu.maxByName(collection)));
                 break;
             case ("count_by_minimal_point"):
-                System.out.println(Menu.countByMinimalPoint(collection, request.getArgument()));
+                menu.answer.add(String.valueOf(menu.countByMinimalPoint(collection, request.getArgument())));
                 break;
             case ("remove_lower_key"):
-                collection = Menu.removeLowerKey(collection, request.getArgument());
+                collection = menu.removeLowerKey(collection, request.getArgument());
                 break;
             case ("replace_if_greater"):
-                collection = menu.replaceIfGreater(collection, request.getArgument());
+                collection = menu.replaceIfGreater(collection, request.getArgument(), request.getTarget());
                 break;
             case ("save"):
-                Menu.savetoFile(collection, nameOfSaveFile, ';');
+                menu.savetoFile(collection, nameOfSaveFile, ';');
                 break;
             case ("execute_script"):
-                collection = Menu.executeScript(collection, request.getArgument(), nameOfSaveFile);
+                collection = menu.executeScript(collection, request.getArgument(), nameOfSaveFile);
                 break;
             default:
-                System.out.println("Неправильно введена команда");
+                menu.answer.add("Неправильно введена команда");
                 history.pollLast();
         }
-        if (history.size() > 12)
+        if (history.size() >= 12)
             history.poll();
 
+        sendLetter(new Request(menu.answer), datagramSocket);
     }
 
-    public int convertToInt(byte[] in) {
-        int res = 0;
+    public Request getLetter(DatagramSocket datagramSocket) throws IOException, ClassNotFoundException {
+        FileOutputStream fileOutput;
+        FileInputStream fileInput;
+        ObjectInputStream objectInput;
 
-        for (byte u: in) {
-            res = res + 10 * (u - '0');
-        }
-        return res;
+        byte[] length = new byte[MyConstant.SIZE];
+        DatagramPacket letterSize = new DatagramPacket(length, length.length);
+        datagramSocket.receive(letterSize);
+
+        byte[] req = new byte[Useful.convertToInt(length)];
+        DatagramPacket inputRequest = new DatagramPacket(req, req.length);
+        datagramSocket.receive(inputRequest);
+
+        fileOutput = new FileOutputStream(file);
+
+        fileOutput.write(req);
+
+        client = inputRequest.getAddress();
+        port = inputRequest.getPort();
+
+        fileInput = new FileInputStream(file);
+        objectInput = new ObjectInputStream(fileInput);
+
+        Request request = (Request) objectInput.readObject();
+
+        objectInput.close();
+        fileInput.close();
+        fileOutput.close();
+
+        return request;
+    }
+
+    public void sendLetter(Request send, DatagramSocket datagramSocket) throws IOException {
+        FileOutputStream fileOutput;
+        FileInputStream fileInput;
+        ObjectOutputStream objectOut;
+
+        fileOutput = new FileOutputStream(file);
+        objectOut = new ObjectOutputStream(fileOutput);
+
+        objectOut.writeObject(send);
+
+        fileInput = new FileInputStream(file);
+        byte[] request = new byte[(int)file.length()];
+        fileInput.read(request);
+
+        byte[] letterSize = Useful.convertToByte(request.length);
+        DatagramPacket i = new DatagramPacket(letterSize, letterSize.length, client, port);
+        datagramSocket.send(i);
+
+        DatagramPacket o = new DatagramPacket(request, request.length, client, port);
+        datagramSocket.send(o);
+
+        objectOut.close();
+        fileInput.close();
+        fileOutput.close();
     }
 }

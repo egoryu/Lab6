@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
     private Float x; //Поле не может быть null
     private Integer y; //Поле не может быть null
 
@@ -12,8 +13,8 @@ public class Coordinates {
     public static Coordinates insert() {
         Scanner in = new Scanner(System.in);
         String input = "";
-        Float x;
-        Integer y;
+        float x;
+        int y;
 
         System.out.println("Введите координаты: ");
 

@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class LabWork implements Comparable<LabWork>{
-    static int lastid = 0;
+public class LabWork implements Comparable<LabWork>, Serializable {
+    static int lastId = 100;
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -23,12 +24,12 @@ public class LabWork implements Comparable<LabWork>{
         this.difficulty = difficulty;
         this.author = author;
         this.creationDate = ZonedDateTime.now();
-        this.id = lastid++;
+        this.id = lastId++;
     }
 
     public LabWork(int id, String name, Coordinates coordinates, ZonedDateTime creationDate, Integer minimalPoint,
                    String description, Difficulty difficulty, Person author) {
-        this.id = id;
+        this.id = Math.max(lastId, id);
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = creationDate;
@@ -36,7 +37,7 @@ public class LabWork implements Comparable<LabWork>{
         this.description = description;
         this.difficulty = difficulty;
         this.author = author;
-        lastid = Math.max(lastid, id + 1);
+        lastId = Math.max(lastId + 1, this.id);
     }
 
     public int getId() {
@@ -55,7 +56,7 @@ public class LabWork implements Comparable<LabWork>{
         Scanner in = new Scanner(System.in);
         String input = "";
         String name = ""; //Поле не может быть null, Строка не может быть пустой
-        Integer minimalPoint; //Поле может быть null, Значение поля должно быть больше 0
+        int minimalPoint; //Поле может быть null, Значение поля должно быть больше 0
         String description = ""; //Длина строки не должна быть больше 5207, Поле не может быть null
         Difficulty difficulty; //Поле не может быть null
 

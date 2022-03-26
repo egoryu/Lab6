@@ -1,12 +1,11 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Request implements Serializable {
     private String command;
     private String argument;
     private LabWork target;
+    private ArrayList<String> answer;
 
     Request() {
         this.command = null;
@@ -32,6 +31,10 @@ public class Request implements Serializable {
         this.target = target;
     }
 
+    Request(ArrayList<String> answer) {
+        this.answer = answer;
+    }
+
     public String getCommand() {
         return command;
     }
@@ -43,11 +46,17 @@ public class Request implements Serializable {
     public LabWork getTarget() {
         return target;
     }
-/*private void  writeObject(ObjectOutputStream os) throws IOException {
-        os.defaultWriteObject();
+
+    public ArrayList<String> getAnswer() {
+        return answer;
     }
 
-    private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
-        is.defaultReadObject();
-    }*/
+    @Override
+    public String toString() {
+        return "Request{" +
+                "command='" + command + '\'' +
+                ", argument='" + argument + '\'' +
+                ", target=" + target +
+                '}';
+    }
 }

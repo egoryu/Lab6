@@ -53,4 +53,23 @@ public class Useful {
     public static boolean isOnlyTab(String str) {
         return str.matches("[\\s]+");
     }
+
+    public static byte[] convertToByte(int in) {
+        byte[] res = new byte[MyConstant.SIZE];
+
+        for (int i = 0; i < res.length; i++) {
+            res[res.length - i - 1] = (byte) (in % 10);
+            in /= 10;
+        }
+        return res;
+    }
+
+    public static int convertToInt(byte[] in) {
+        int res = 0;
+
+        for (byte u: in) {
+            res = 10 * res + u;
+        }
+        return res;
+    }
 }

@@ -1,0 +1,9 @@
+
+import java.io.*;
+
+public class Client {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        Transfer transfer = new Transfer();
+        transfer.Start();
+    }
+}

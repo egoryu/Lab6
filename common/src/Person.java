@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.time.*;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Scanner;
 
-public class Person {
+public class Person implements Serializable {
     private String name; //Поле не может быть null, Строка не может быть пустой
     private java.time.ZonedDateTime birthday; //Поле может быть null
     private Integer height; //Поле не может быть null, Значение поля должно быть больше 0
@@ -20,8 +21,8 @@ public class Person {
     public static Person insert() {
         java.time.ZonedDateTime birthday = null;
         Scanner in = new Scanner(System.in);
-        String input = "", name = "";
-        Integer h;
+        String input = "", name;
+        int h;
         long w;
 
         System.out.println("Введите данные автора: ");
@@ -144,7 +145,7 @@ public class Person {
     public String parse(char del) {
         if (this.birthday == null) {
             return name +
-                    del + birthday +
+                    del + null +
                     del + height +
                     del + weight;
         } else {

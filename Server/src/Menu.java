@@ -2,34 +2,38 @@ import java.io.IOException;
 import java.util.*;
 
 public class Menu {
-    public static void help() {
-        System.out.println("help: вывести справку по доступным командам");
-        System.out.println("info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)");
-        System.out.println("show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении");
-        System.out.println("insert null {element} : добавить новый элемент с заданным ключом");
-        System.out.println("update id {element} : обновить значение элемента коллекции, id которого равен заданному");
-        System.out.println("remove_key null : удалить элемент из коллекции по его ключу");
-        System.out.println("clear : очистить коллекцию");
-        System.out.println("save : сохранить коллекцию в файл");
-        System.out.println("execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.");
-        System.out.println("exit : завершить программу (без сохранения в файл)");
-        System.out.println("history : вывести последние 12 команд (без их аргументов)");
-        System.out.println("replace_if_greater null {element} : заменить значение по ключу, если новое значение больше старого");
-        System.out.println("remove_lower_key null : удалить из коллекции все элементы, ключ которых меньше, чем заданный");
-        System.out.println("sum_of_minimal_point : вывести сумму значений поля minimalPoint для всех элементов коллекции");
-        System.out.println("max_by_name : вывести любой объект из коллекции, значение поля name которого является максимальным");
-        System.out.println("count_by_minimal_point minimalPoint : вывести количество элементов, значение поля minimalPoint которых равно заданному");
+    ArrayList<String> answer;
+    Menu() {
+        this.answer = new ArrayList<>();
+    }
+    public void help() {
+        answer.add("help: вывести справку по доступным командам");
+        answer.add("info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)");
+        answer.add("show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении");
+        answer.add("insert null {element} : добавить новый элемент с заданным ключом");
+        answer.add("update id {element} : обновить значение элемента коллекции, id которого равен заданному");
+        answer.add("remove_key null : удалить элемент из коллекции по его ключу");
+        answer.add("clear : очистить коллекцию");
+        answer.add("save : сохранить коллекцию в файл");
+        answer.add("execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.");
+        answer.add("exit : завершить программу (без сохранения в файл)");
+        answer.add("history : вывести последние 12 команд (без их аргументов)");
+        answer.add("replace_if_greater null {element} : заменить значение по ключу, если новое значение больше старого");
+        answer.add("remove_lower_key null : удалить из коллекции все элементы, ключ которых меньше, чем заданный");
+        answer.add("sum_of_minimal_point : вывести сумму значений поля minimalPoint для всех элементов коллекции");
+        answer.add("max_by_name : вывести любой объект из коллекции, значение поля name которого является максимальным");
+        answer.add("count_by_minimal_point minimalPoint : вывести количество элементов, значение поля minimalPoint которых равно заданному");
     }
 
-    public static void info(LinkedHashMap<String, LabWork> collection) {
+    public void info(LinkedHashMap<String, LabWork> collection) {
         if (collection == null || collection.isEmpty()) {
-            System.out.println("Коллекция пуста");
+            answer.add("Коллекция пуста");
         } else {
-            System.out.println("Размер коллекции: " + collection.size());
+            answer.add("Размер коллекции: " + collection.size());
         }
 
-        System.out.println("Тип коллекции: LinkedHashMap<String, LabWork>");
-        System.out.println("LabWork: \n" +
+        answer.add("Тип коллекции: LinkedHashMap<String, LabWork>");
+        answer.add("LabWork: \n" +
                 "int id" + "\n" +
                 "String name" + "\n" +
                 "Coordinates coordinates" + "\n" +
@@ -38,124 +42,75 @@ public class Menu {
                 "String description" + "\n" +
                 "Difficulty difficulty" + "\n" +
                 "Person author");
-        System.out.println("Coordinates:\n" +
+        answer.add("Coordinates:\n" +
                 "Float x\n" +
                 "Integer y");
-        System.out.println("Person\n" +
+        answer.add("Person\n" +
                 "String name\n" +
                 "java.time.ZonedDateTime birthday\n" +
                 "Integer height\n" +
                 "long weight");
     }
 
-    public static void show(LinkedHashMap<String, LabWork> collection) {
-        int i = 0;
-
+    public void show(LinkedHashMap<String, LabWork> collection) {
         if (collection == null || collection.isEmpty()) {
-            System.out.println("Коллекция пуста");
+            answer.add("Коллекция пуста");
             return;
         }
 
-        for (Map.Entry<String, LabWork> entry : collection.entrySet()) {
-            String str = entry.getKey();
-            LabWork labWork = entry.getValue();
-            System.out.println(i + ") " + str + " - " + labWork);
-            i++;
-        }
+        collection.forEach((key, value) -> answer.add(key + " - " + value));
     }
 
-    public LinkedHashMap<String, LabWork> insert(String lhmKey) {
-        LinkedHashMap<String, LabWork> answer = new LinkedHashMap<>();
-        Scanner in = new Scanner(System.in);
-        String input;
-
-        input = lhmKey;
-        while(input.isEmpty() || input.contains(";") || Useful.isOnlyTab(input)) {
-            System.out.print("Введите ключ: ");
-            if (in.hasNextLine())
-                input = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+    public LinkedHashMap<String, LabWork> insert(LinkedHashMap<String, LabWork> collection, String lhmKey, LabWork labWork) {
+        if (lhmKey.isEmpty() || lhmKey.contains(";") || Useful.isOnlyTab(lhmKey)) {
+            answer.add("Не правильный аргумент");
+            return collection;
         }
-        lhmKey = input;
 
-        answer.put(lhmKey, LabWork.insert());
-
-        return answer;
+        collection.put(lhmKey, labWork);
+        answer.add("Добавлено");
+        return collection;
     }
 
     public LinkedHashMap<String, LabWork> removeKey(LinkedHashMap<String, LabWork> collection, String lhmKey) {
-        Scanner in = new Scanner(System.in);
-
-        while(lhmKey.isEmpty() || !collection.containsKey(lhmKey)) {
-            System.out.print("Введите ключ по которому надо удалить: ");
-            if (in.hasNextLine())
-                lhmKey = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+        if (lhmKey.isEmpty() || !collection.containsKey(lhmKey)) {
+            answer.add("Такого ключа нет");
+            return collection;
         }
         collection.remove(lhmKey);
-
+        answer.add("Удалено");
         return collection;
     }
 
-    public static void history(ArrayDeque<String> history) {
+    public void history(ArrayDeque<String> history) {
         if (history.isEmpty())
-            System.out.println("История пуста");
+            answer.add("История пуста");
         else {
-            System.out.println("Последние 12 команд: ");
-            for (String s : history) {
-                System.out.println(s);
-            }
+            answer.add("Последние 12 команд: ");
+            answer.addAll(history);
         }
     }
 
-    public LinkedHashMap<String, LabWork> update(LinkedHashMap<String, LabWork> collection, String id) {
-        Scanner in = new Scanner(System.in);
-        String key;
-
-        while(!Useful.isInteger(id)) {
-            System.out.print("Введите id: ");
-            if (in.hasNextLine())
-                id = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+    public LinkedHashMap<String, LabWork> update(LinkedHashMap<String, LabWork> collection, String id, LabWork labWork) {
+        if (!Useful.isInteger(id)) {
+            answer.add("Не корректное id");
+            return collection;
         }
 
-        Iterator iterator = collection.values().iterator();
-        int i = 0;
-        LabWork tmp = null;
+        String[] key = {""};
+        collection.entrySet().stream().filter((s)-> s.getValue().getId() == Integer.parseInt(id)).forEach(s -> key[0] = s.getKey());
 
-        while (iterator.hasNext()) {
-            tmp = (LabWork) iterator.next();
-            if (tmp.getId() == Integer.parseInt(id)) {
-                break;
-            }
-            i++;
+        if (key[0].isEmpty()) {
+            answer.add("Нет элемента с таким id");
         }
-
-        if (i != collection.size()) {
-            iterator = collection.keySet().iterator();
-            while (i-- > 0) {
-                iterator.next();
-            }
-            key = (String) iterator.next();
-
-            collection.replace(key, tmp, LabWork.insert());
+        else {
+            answer.add("Заменено");
+            collection.replace(key[0], labWork);
         }
-        else
-            System.out.println("Такого id нет");
-
         return collection;
     }
 
-    public static int sumOfMinimalPoint(LinkedHashMap<String, LabWork> collection) {
+    public int sumOfMinimalPoint(LinkedHashMap<String, LabWork> collection) {
         int res = 0;
 
         for (LabWork labWork : collection.values()) {
@@ -165,113 +120,63 @@ public class Menu {
         return res;
     }
 
-    public static LabWork maxByName(LinkedHashMap<String, LabWork> collection) {
-        LabWork ans = null;
-        String res = "";
-
-        for (LabWork labWork : collection.values()) {
-            if (labWork.getName().length() >= res.length()) {
-                res = labWork.getName();
-                ans = labWork;
-            }
-        }
-
-        return ans;
+    public LabWork maxByName(LinkedHashMap<String, LabWork> collection) {
+        return collection.entrySet().stream().max(Comparator.comparing(s -> s.getValue().getName())).get().getValue();
     }
 
-    public static int countByMinimalPoint(LinkedHashMap<String, LabWork> collection, String minimalPoint) {
-        Scanner in = new Scanner(System.in);
-        int res = 0;
-        int mp;
-
-        while(!Useful.isInteger(minimalPoint) || Integer.parseInt(minimalPoint) <= 0) {
-            System.out.print("Введите значение minimal point: ");
-            if (in.hasNextLine())
-                minimalPoint = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+    public long countByMinimalPoint(LinkedHashMap<String, LabWork> collection, String minimalPoint) {
+        if (!Useful.isInteger(minimalPoint)) {
+            answer.add("Не правильный вид аргумента");
+            return 0;
         }
-        mp = Integer.parseInt(minimalPoint);
+        int mp = Integer.parseInt(minimalPoint);
 
-        for (LabWork labWork : collection.values()) {
-            if (mp == labWork.getMinimalPoint())
-                res += labWork.getMinimalPoint();
-        }
-
-        return res;
+        return collection.entrySet().stream().filter(s -> s.getValue().getMinimalPoint() == mp).count();
     }
 
-    public static LinkedHashMap<String, LabWork> removeLowerKey(LinkedHashMap<String, LabWork> collection, String lhmKey) {
-        Scanner in = new Scanner(System.in);
-
-        while(lhmKey.isEmpty() || lhmKey.contains(";") || Useful.isOnlyTab(lhmKey)) {
-            System.out.print("Введите ключ по которому надо удалить: ");
-            if (in.hasNextLine())
-                lhmKey = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+    public LinkedHashMap<String, LabWork> removeLowerKey(LinkedHashMap<String, LabWork> collection, String lhmKey) {
+        if (lhmKey.isEmpty()) {
+            answer.add("Нет ключа");
+            return collection;
         }
 
-        for (String s : collection.keySet()) {
-            if (s.length() < lhmKey.length()) {
-                collection.remove(s);
-            }
-        }
+        LinkedHashMap<String, LabWork> result = new LinkedHashMap<>();
+        collection.entrySet().stream().filter(s -> s.getKey().length() >= lhmKey.length()).forEachOrdered(s -> result.put(s.getKey(), s.getValue()));
 
-        return collection;
+        answer.add("Удалено");
+
+        return result;
     }
 
-    public LinkedHashMap<String, LabWork> replaceIfGreater(LinkedHashMap<String, LabWork> collection, String lhmKey) {
-        Scanner in = new Scanner(System.in);
-
-        while(lhmKey.isEmpty() || !collection.containsKey(lhmKey)) {
-            System.out.print("Введите ключ по которому надо заменить: ");
-            if (in.hasNextLine())
-                lhmKey = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
+    public LinkedHashMap<String, LabWork> replaceIfGreater(LinkedHashMap<String, LabWork> collection, String lhmKey, LabWork labWork) {
+        if (lhmKey.isEmpty() || !collection.containsKey(lhmKey)) {
+            answer.add("Не такого ключа");
+            return collection;
         }
-
-        LabWork labWork = LabWork.insert();
 
         if (collection.get(lhmKey).compareTo(labWork) < 0) {
             collection.replace(lhmKey, collection.get(lhmKey), labWork);
-            System.out.println("Заменено");
+            answer.add("Заменено");
         } else {
-            System.out.println("Замены не было");
+            answer.add("Замены не было");
         }
 
         return collection;
     }
 
-    public static void savetoFile(LinkedHashMap<String, LabWork> collection, String name, char del) {
+    public void savetoFile(LinkedHashMap<String, LabWork> collection, String name, char del) {
         try {
             IO.Write(collection, name, del);
+            answer.add("Сохранено");
         } catch (IOException e) {
-            e.printStackTrace();
+            answer.add("Произошла ошибка");
         }
     }
 
-    public static LinkedHashMap<String, LabWork> executeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
-        Scanner in = new Scanner(System.in);
-
-        while(script.isEmpty()) {
-            System.out.print("Введите путь к скрипту: ");
-            if (in.hasNextLine())
-                script = in.nextLine();
-            else {
-                System.out.println("Плохой символ");
-                System.exit(0);
-            }
-        }
-
-        collection = Script.makeScript(collection, script, saveFile);
+    public LinkedHashMap<String, LabWork> executeScript(LinkedHashMap<String, LabWork> collection, String script, String saveFile) {
+        Script script1 = new Script();
+        collection = script1.makeScript(collection, script, saveFile);
+        answer.addAll(script1.answer);
         return collection;
     }
 
